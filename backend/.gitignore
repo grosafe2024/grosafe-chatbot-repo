@@ -1,0 +1,19 @@
+# Ignore Python cache
+__pycache__/
+*.pyc
+
+# Ignore Chroma vector DB files
+chroma_langchain_db/
+*.sqlite3
+*.bin
+
+# Ignore PDF knowledge base (optional — comment this out if you want to include PDFs)
+grosafe_kb_pdfs/*.pdf
+
+# Ignore environment and dependency artifacts
+*.env
+*.DS_Store
+*.log
+
+# Node.js lock files if not needed for backend
+package-lock.json

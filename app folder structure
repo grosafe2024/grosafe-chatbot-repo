@@ -1,0 +1,41 @@
+grosafe-chatbot-flask-repo/
+│
+├── backend/                    # Flask backend
+│   ├── app.py                  # Flask app
+│   ├── chatbot.py              # Chatbot logic
+│   └── vector.py               # Vector DB logic
+│
+├── knowledge_base/             # Folder for your PDFs
+│   └── one or more pdf files
+│
+├── frontend/                   # React frontend
+│   ├── src/
+│   │   ├── App.jsx             # React app code
+│   │   ├── main.jsx            # React entry point
+│   │   └── index.css
+│   ├── public/
+│   │   └── vite.svg          
+│   ├── package.json            # Frontend dependencies
+│   └── index.html              # HTML template
+
+
+Prompt
+This is my project structure:
+grosafe-chatbot-flask-repo/
+│
+├── backend/                    # Flask backend
+│   ├── app.py                  # Flask app
+│   ├── chatbot.py              # Chatbot logic
+│   └── vector.py               # Vector DB logic
+│
+├── knowledge_base/             # Folder for your PDFs
+│   └── one or more pdf files
+│
+├── frontend/                   # React frontend
+│   ├── src/
+│   │   ├── App.jsx             # React app code
+│   │   └── main.jsx            # React entry point
+│   ├── public/
+│   │   └── vite.svg          
+│   ├── package.json            # Frontend dependencies
+│   └── index.html              # HTML template
