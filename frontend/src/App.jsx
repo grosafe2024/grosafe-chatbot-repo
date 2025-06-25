@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import GroSafeLogo from "../src/assets/images/GroSafeLogo.png";
 
 function App() {
     const [input, setInput] = useState("");
@@ -43,28 +44,46 @@ function App() {
                     </svg>
 
     return (
-        <div className="container">
-            <h1 className="chat-title">GroSafe Chatbot</h1>
-            <div className="chat-container">
-                {messages.map((msg, index) => (
-                    <div key={index} className={`chat-bubble ${msg.role}`}>
-                        <p>{msg.text}</p>
+        <div className="container pt-5">
+            <div className="row">
+                <div className="col-8 mx-auto bg-light p-3 shadow rounded">
+                    {/* <h2 className="text-center mb-4">GroSafe Chatbot</h2> */}
+                    <img src={GroSafeLogo} alt="Logo" className="img-fluid logo w-25 d-block mx-auto"></img>
+
+                    <div className="border rounded p-3 mb-3 bg-white" style={{ height: '400px', overflowY: 'auto' }}>
+                        <div className="alert alert-info text-center mb-4" role="alert">
+                            <h4>Welcome to GroSafe Chatbot!</h4>
+                            <p>Your AI assistant for child grooming awareness and support.</p>
+                        </div>
+                        {messages.map((msg, index) => (
+                            <div key={index} className={`d-flex mb-2 ${msg.role === 'user' ? 'justify-content-end' : 'justify-content-start'}`}>
+                                <div className={`p-2 rounded ${msg.role === 'user' ? 'bg-primary text-white' : 'bg-light'}`} style={{ maxWidth: '70%' }}>
+                                    <p className="mb-0">{msg.text}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
-            <div className="input-area">
-                <textarea
-                    placeholder="Welcome to GroSafe..."
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    rows={3}
-                />
-                
-                <button onClick={handleChat} disabled={loading} className="send-button">
-                    {loading ? "..." : send_sv}
-                </button>
+
+                    <div className="input-group">
+                        <textarea
+                            className="form-control bg-white"
+                            placeholder="Welcome to GroSafe..."
+                            value={input}
+                            onChange={(e) => setInput(e.target.value)}
+                            rows={2}
+                        />
+                        <button
+                            onClick={handleChat}
+                            disabled={loading}
+                            className="btn btn-primary"
+                        >
+                            {loading ? "..." : send_sv}
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
+
     );
 }
 
