@@ -3,17 +3,20 @@ from langchain_core.prompts import ChatPromptTemplate
 
 from vector import retriever  # <-- Import from your new vector script
 import time
-import sys  # 🔄 CHANGED: Required for flush during streaming
+import sys  # CHANGED: Required for flush during streaming
 
 # Prompt setup
-template = """You are GroSafe, a trusted Irish assistant built *only* to answer questions about child grooming, protection, abuse, support services, and official Irish agencies like Tusla, ISPCC, CUAN, DRIVE, and An Garda Síochána.
+template = """You are GroSafe, a trusted Irish assistant built only to answer questions about child grooming, protection, abuse, support services, and official Irish agencies like ISPCC, Tusla, CUAN, DRIVE, and An Garda Síochána.
 
 If the user's question is unrelated to these topics or not supported by the context, say:
 "I'm sorry, I don't have that information. You may want to contact the relevant service directly."
 
-ONLY answer the specific question asked — do NOT ask or answer your own follow-up questions.
-
-Respond in no more than 3 sentences. Use only the provided context. If unsure, say: "I'm sorry, I don't have that information."
+Strict Rules:
+- Do NOT ask or answer your own follow-up questions.
+- Do NOT include imaginary "Question:" or "Your answer:" sections in your reply.
+- Your response must be short, natural, empathetic, and conversational — no more than 3 sentences.
+- Maintain a warm, supportive, and understanding tone at all times.
+- Use only the provided context. If unsure, say: "I'm sorry, I don't have that information."
 
 Context:
 {context}
@@ -28,7 +31,7 @@ Your answer:
 """
 
 prompt = ChatPromptTemplate.from_template(template)
-model = OllamaLLM(model="granite3.1-dense:2b-instruct-q4_K_M")
+model = OllamaLLM(model="granite3.1-dense:2b-instruct-q4_K_M", temperature=0.1)
 chain = prompt | model
 
 # For Client / API
@@ -39,7 +42,12 @@ def get_bot_response(user_input: str) -> str:
     
     docs_and_scores = retriever.vectorstore.similarity_search_with_score(user_input, k=6)
     docs = [doc for doc, score in docs_and_scores if score < 1.27]
-    context = "\n\n".join([doc.page_content.strip() for doc in docs[:3]])[:3000]
+    # context = "\n\n".join([doc.page_content.strip() for doc in docs[:3]])[:3000]
+    context = "\n\n".join([doc.page_content.strip() for doc in docs[:3]])[:2500]
+
+    #Log scores to track threshold performance
+    #for doc, score in docs_and_scores:
+    #    print(f"Score: {score:.2f} - Preview: {doc.page_content[:60]}")
 
     if not context.strip():
         result = "I'm sorry, I don't have that information. You may want to contact the relevant service directly."
@@ -76,17 +84,17 @@ def handle_conversation():
             print(f"GroSafe (Granite): {result}")
             history += f"User: {user_input}\nBot: {result}\n"
         else:
-            print("GroSafe (Granite): ", end="", flush=True)  # 🔄 CHANGED: Start stream line
-            result = ""  # 🔄 CHANGED: Capture streamed output
-            for chunk in chain.stream({  # 🔄 CHANGED: Stream instead of invoke
+            print("GroSafe (Granite): ", end="", flush=True)  # CHANGED: Start stream line
+            result = ""  # CHANGED: Capture streamed output
+            for chunk in chain.stream({  # CHANGED: Stream instead of invoke
                 "history": history,
                 "question": user_input,
                 "context": context
             }):
-                print(chunk, end="", flush=True)  # 🔄 CHANGED: Stream output live
-                result += chunk  # 🔄 CHANGED: Append for history
-            print()  # 🔄 CHANGED: Newline after streaming output
-            history += f"User: {user_input}\nBot: {result}\n"  # 🔄 CHANGED: Save full streamed text
+                print(chunk, end="", flush=True)  # CHANGED: Stream output live
+                result += chunk  # CHANGED: Append for history
+            print()  # CHANGED: Newline after streaming output
+            history += f"User: {user_input}\nBot: {result}\n"  # CHANGED: Save full streamed text
 
         print(f"Response time: {int(time.time() - start)} sec")
 

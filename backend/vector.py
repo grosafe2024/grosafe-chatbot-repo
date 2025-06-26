@@ -23,6 +23,7 @@ if add_documents:
     # Split PDFs into manageable chunks
     text_splitter = RecursiveCharacterTextSplitter(chunk_size=384, chunk_overlap=64)
 
+    # Load PDFs from local folder
     for filename in os.listdir(pdf_dir):
         if filename.lower().endswith(".pdf"):
             loader = PyPDFLoader(os.path.join(pdf_dir, filename))
@@ -57,4 +58,7 @@ if add_documents:
     print(f"vector.py: Added {len(documents)} documents to the new vector store.")
 
 # Create retriever with top-k filtering (optionally use MMR)
-retriever = vector_store.as_retriever(search_kwargs={"k": 6})
+retriever = vector_store.as_retriever(
+    search_type= "mmr", #Maximum Marignal Relevance: balances relevance + diversity
+    search_kwargs={"k": 4}
+    )
